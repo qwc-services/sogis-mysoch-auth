@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/qwc-services/sogis-mysoch-auth/master/schemas/sogis-mysoch-auth.json",
+  "title": "SOGIS my.so.ch authentication service",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "title": "JSON Schema",
+      "description": "Reference to JSON schema of this config",
+      "type": "string",
+      "format": "uri",
+      "default": "https://raw.githubusercontent.com/qwc-services/sogis-mysoch-auth/master/schemas/sogis-mysoch-auth.json",
+    },
+    "service": {
+      "title": "Service name",
+      "type": "string",
+      "const": "mysoch-auth"
+    },
+    "config": {
+      "title": "Config options",
+      "type": "object",
+      "properties": {
+        "db_url": {
+          "description": "DB connection URL",
+          "type": "string"
+        },
+        "jwe_secret": {
+          "description": "my.so.ch JWE secret key",
+          "type": "string"
+        },
+        "jwt_secret": {
+          "description": "my.so.ch JWT secret key",
+          "type": "string"
+        },
+        "allowed_iss": {
+          "description": "Allowed values of the iss token claim.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "userid_claims": {
+          "description": "Token claims which can contain the userid. The first non-empty claim is used.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "displayname_claims": {
+          "description": "Token claims which can contain the display name. The first non-empty claim is used.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "userid_verify_sql": {
+          "description": "Query which verifies whether the userid exist. Must contain the :id placeholder",
+          "type": "string"
+        }
+      },
+      "required": [
+        "db_url",
+        "jwe_secret",
+        "jwt_secret",
+        "iss",
+        "userid_claims",
+        "displayname_claims",
+        "userid_verify_sql"
+      ]
+    }
+  },
+  "required": [
+    "service",
+    "config"
+  ]
+}
