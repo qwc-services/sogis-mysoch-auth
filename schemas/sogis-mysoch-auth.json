@@ -62,7 +62,7 @@
         "db_url",
         "jwe_secret",
         "jwt_secret",
-        "iss",
+        "allowed_iss",
         "userid_claims",
         "displayname_claims",
         "userid_verify_sql"
