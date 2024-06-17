@@ -88,11 +88,6 @@ def login():
         app.logger.info("login: Bad value for iss")
         abort(400)
 
-    # Verify exp
-    if claims["exp"] >= round(time.time()):
-        app.logger.info("login: Token expired")
-        abort(400)
-
     # Database
     db_url = config.get('db_url')
     db_engine = DatabaseEngine()
