@@ -5,15 +5,15 @@ import sys
 import time
 from base64 import b64decode, urlsafe_b64encode
 from flask import Flask, jsonify, request, abort, make_response, redirect
-from flask_jwt_extended import create_access_token, set_access_cookies
+from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
 from jwcrypto.jwe import JWE
 from jwcrypto.jwk import JWK
 from jwcrypto.jwt import JWT
 from sqlalchemy.sql import text as sql_text
 from urllib.parse import urlencode, urlparse, parse_qsl, urlunparse, unquote
 
+from qwc_services_core.auth import auth_manager, optional_auth, get_identity
 from qwc_services_core.database import DatabaseEngine
-from qwc_services_core.jwt import jwt_manager
 from qwc_services_core.runtime_config import RuntimeConfig
 from qwc_services_core.tenant_handler import (
     TenantHandler, TenantPrefixMiddleware, TenantSessionInterface)
@@ -28,7 +28,7 @@ app.config['JWT_COOKIE_SAMESITE'] = os.environ.get(
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = int(os.environ.get(
     'JWT_ACCESS_TOKEN_EXPIRES', 12*3600))
 
-jwt = jwt_manager(app)
+jwt = auth_manager(app)
 app.secret_key = app.config['JWT_SECRET_KEY']
 
 
@@ -127,6 +127,15 @@ def login():
         target_url = urlunparse(parts)
         return make_response(redirect(target_url))
 
+@app.route('/logout', methods=['GET'])
+@optional_auth
+def logout():
+    target_url = request.args.get('url')
+    identity = get_identity()
+    resp = make_response(redirect(target_url))
+    if identity:
+        unset_jwt_cookies(resp)
+    return resp
 
 @app.route("/ready", methods=['GET'])
 def ready():
