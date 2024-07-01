@@ -56,6 +56,14 @@
         "userid_verify_sql": {
           "description": "Query which verifies whether the userid exist. Must contain the :id placeholder",
           "type": "string"
+        },
+        "tenant_header_name": {
+          "description": "Name of tenant header to set when redirecting on successfull mysoch-auth",
+          "type": "string"
+        },
+        "tenant_header_value": {
+          "description": "Value of tenant header to set when redirecting on successfull mysoch-auth",
+          "type": "string"
         }
       },
       "required": [

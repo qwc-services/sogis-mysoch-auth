@@ -117,6 +117,11 @@ def login():
         }
         access_token = create_access_token(identity=identity)
         resp = make_response(redirect(target_url))
+        tenant_header_name = config.get("tenant_header_name", "")
+        tenant_header_value = config.get("tenant_header_value", "")
+        if tenant_header_name:
+            app.logger.debug("Setting header %s=%s" % (tenant_header_name, tenant_header_value))
+            resp.headers[tenant_header_name] = tenant_header_value
         set_access_cookies(resp, access_token)
         return resp
     else:
