@@ -64,6 +64,10 @@
         "tenant_header_value": {
           "description": "Value of tenant header to set when redirecting on successfull mysoch-auth",
           "type": "string"
+        },
+        "max_token_duration": {
+          "description": "Maximum allowed JWT token validity duration (exp - nbf), in seconds. Default: 60",
+          "type": "integer"
         }
       },
       "required": [
