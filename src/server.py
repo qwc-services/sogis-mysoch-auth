@@ -166,6 +166,9 @@ def login():
         result = connection.execute(sql, {"id": userid})
         user_exists = result.first() is not None
 
+    parts = urlparse(target_url)
+    target_query = dict(parse_qsl(parts.query))
+
     if user_exists:
         identity = {
             'username': userid,
@@ -183,14 +186,13 @@ def login():
             app.logger.debug("Setting header %s=%s" % (tenant_header_name, tenant_header_value))
             resp.headers[tenant_header_name] = tenant_header_value
         set_access_cookies(resp, access_token)
-        return resp
+        target_query.update({'config:tenant': config.get("tenant_header_name", "") + "=" + config.get("tenant_header_value", "")})
     else:
-        parts = urlparse(target_url)
-        target_query = dict(parse_qsl(parts.query))
         target_query.update({'mysoch:unknownidentity': 1})
-        parts = parts._replace(query=urlencode(target_query))
-        target_url = urlunparse(parts)
-        return make_response(redirect(target_url))
+
+    parts = parts._replace(query=urlencode(target_query))
+    target_url = urlunparse(parts)
+    return make_response(redirect(target_url))
 
 @app.route('/logout', methods=['GET'])
 @optional_auth
