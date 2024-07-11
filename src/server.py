@@ -173,12 +173,16 @@ def login():
         identity = {
             'username': userid,
             'user_infos': {
-                'displayname': displayname,
-                'mysoch': True
+                'mysoch': True,
+                'displayname': displayname
             },
             'autologin': True
         }
         access_token = create_access_token(identity=identity)
+        target_query.update({'config:tenant': config.get("tenant_header_name", "") + "=" + config.get("tenant_header_value", "")})
+        target_query.update({'config:autologin': 1})
+        parts = parts._replace(query=urlencode(target_query))
+        target_url = urlunparse(parts)
         resp = make_response(redirect(target_url))
         tenant_header_name = config.get("tenant_header_name", "")
         tenant_header_value = config.get("tenant_header_value", "")
@@ -186,7 +190,7 @@ def login():
             app.logger.debug("Setting header %s=%s" % (tenant_header_name, tenant_header_value))
             resp.headers[tenant_header_name] = tenant_header_value
         set_access_cookies(resp, access_token)
-        target_query.update({'config:tenant': config.get("tenant_header_name", "") + "=" + config.get("tenant_header_value", "")})
+        return resp
     else:
         target_query.update({'mysoch:unknownidentity': 1})
 
