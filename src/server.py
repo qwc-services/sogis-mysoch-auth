@@ -178,14 +178,15 @@ def login():
             },
             'autologin': True
         }
+        tenant_header_name = config.get("tenant_header_name", "")
+        tenant_header_value = config.get("tenant_header_value", "")
         access_token = create_access_token(identity=identity)
-        target_query.update({'config:tenant': config.get("tenant_header_name", "") + "=" + config.get("tenant_header_value", "")})
+        if tenant_header_name:
+            target_query.update({'config:tenant': tenant_header_name + "=" + tenant_header_value})
         target_query.update({'config:autologin': 1})
         parts = parts._replace(query=urlencode(target_query))
         target_url = urlunparse(parts)
         resp = make_response(redirect(target_url))
-        tenant_header_name = config.get("tenant_header_name", "")
-        tenant_header_value = config.get("tenant_header_value", "")
         if tenant_header_name:
             app.logger.debug("Setting header %s=%s" % (tenant_header_name, tenant_header_value))
             resp.headers[tenant_header_name] = tenant_header_value
