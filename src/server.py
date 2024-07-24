@@ -199,6 +199,37 @@ def login():
     target_url = urlunparse(parts)
     return make_response(redirect(target_url))
 
+@app.route('/checklogin', methods=['GET'])
+@optional_auth
+def checklogin():
+    config_handler = RuntimeConfig("mysochAuth", app.logger)
+    tenant = tenant_handler.tenant()
+    config = config_handler.tenant_config(tenant)
+
+    identity = get_identity()
+    target_url = request.args.get('url')
+    if isinstance(identity, dict) and identity.get("user_infos", {}).get("mysoch", False):
+        tenant_header_name = config.get("tenant_header_name", "")
+        tenant_header_value = config.get("tenant_header_value", "")
+        parts = urlparse(target_url)
+        target_query = dict(parse_qsl(parts.query))
+        if tenant_header_name:
+            target_query.update({'config:tenant': tenant_header_name + "=" + tenant_header_value})
+        target_query.update({'config:autologin': 1})
+        parts = parts._replace(query=urlencode(target_query))
+        target_url = urlunparse(parts)
+        resp = make_response(redirect(target_url))
+        print(tenant_header_name + "=" + tenant_header_value)
+        if tenant_header_name:
+            app.logger.debug("Setting header %s=%s" % (tenant_header_name, tenant_header_value))
+            resp.headers[tenant_header_name] = tenant_header_value
+        return resp
+    else:
+        resp = make_response(redirect(target_url))
+        if identity:
+            unset_jwt_cookies(resp)
+        return resp
+
 @app.route('/logout', methods=['GET'])
 @optional_auth
 def logout():
