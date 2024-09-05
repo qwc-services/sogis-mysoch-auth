@@ -40,17 +40,27 @@
           }
         },
         "userid_claims": {
-          "description": "Token claims which can contain the userid. The first non-empty claim is used.",
+          "description": "Token claims keys which can contain the userid. The first non-empty claim value is used.",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "displayname_claims": {
-          "description": "Token claims which can contain the display name. The first non-empty claim is used.",
+          "description": "Token claims keys which can contain the display name. The first non-empty claim value is used. If an array is specified, the claim values are used if all are not None, and joined by a whitespace.",
           "type": "array",
           "items": {
-            "type": "string"
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
           }
         },
         "userid_verify_sql": {

@@ -156,7 +156,12 @@ def login():
 
     # Verify login
     userid = next(claims[userid_claim] for userid_claim in config.get("userid_claims", []) if claims.get(userid_claim))
-    displayname = next(claims[displayname_claim] for displayname_claim in config.get("displayname_claims", []) if claims.get(displayname_claim))
+    toarray = lambda x: [x] if isinstance(x, str) else x
+    displayname = next(
+        " ".join(list(map(lambda x: claims.get(x), toarray(displayname_claim))))
+        for displayname_claim in config.get("displayname_claims", [])
+        if None not in list(map(lambda x: claims.get(x), toarray(displayname_claim)))
+    )
     app.logger.debug("userid: %s, displayname: %s" % (userid, displayname))
 
     user_exists = False
