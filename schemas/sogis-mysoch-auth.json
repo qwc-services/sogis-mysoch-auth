@@ -67,6 +67,14 @@
           "description": "Query which verifies whether the userid exist. Must contain the :id placeholder",
           "type": "string"
         },
+        "autoregistration_allowed_query": {
+          "description": "Query which checks whether autoregistration is allowed. Can reference claim parameters in placeholders, with dashes replaced by _ (i.e. :x_igov_login_email )",
+          "type": "string"
+        },
+        "autoregistration_query": {
+          "description": "Query which performs autoregistration. Can reference claim parameters in placeholders, with dashes replaced by _ (i.e. :x_igov_login_email ), and :id as the user id.",
+          "type": "string"
+        },
         "tenant_header_name": {
           "description": "Name of tenant header to set when redirecting on successfull mysoch-auth",
           "type": "string"

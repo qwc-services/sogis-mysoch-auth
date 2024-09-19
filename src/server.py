@@ -167,9 +167,31 @@ def login():
     user_exists = False
     with db.connect() as connection:
 
-        sql = sql_text(config.get("userid_verify_sql", ""))
-        result = connection.execute(sql, {"id": userid})
-        user_exists = result.first() is not None
+        sql = sql_text(config.get("userid_verify_sql", "SELECT"))
+        result = connection.execute(sql, {"id": userid}).first()
+        user_exists = result is not None
+
+    # Check if user can be automatically registered
+    if not user_exists:
+        claim_params = dict([(key.replace("-", "_"), claims[key]) for key in claims])
+        claim_params["id"] = userid
+        registration_allowed = False
+        with db.connect() as connection:
+            sql = sql_text(config.get("autoregistration_allowed_query", "SELECT FALSE"))
+            result = connection.execute(sql, claim_params).first()
+            registration_allowed = result and result[0] == True
+        app.logger.debug("userid %s verification failed, autoregistration allowed: %d" % (userid, registration_allowed))
+
+        if registration_allowed:
+            with db.connect() as connection:
+                sql = sql_text(config.get("autoregistration_query", "SELECT"))
+                try:
+                    connection.execute(sql, claim_params)
+                    connection.commit()
+                    user_exists = True
+                    app.logger.debug("autoregistration succeeded")
+                except Exception as e:
+                    app.logger.debug("autoregistration failed: %s" % str(e))
 
     parts = urlparse(target_url)
     target_query = dict(parse_qsl(parts.query))
