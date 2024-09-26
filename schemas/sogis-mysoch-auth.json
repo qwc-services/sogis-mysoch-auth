@@ -64,7 +64,7 @@
           }
         },
         "userid_verify_sql": {
-          "description": "Query which verifies whether the userid exist. Must contain the :id placeholder",
+          "description": "Query which verifies whether the userid exist. Can reference claim parameters in placeholders, with dashes replaced by _ (i.e. :x_igov_login_email ), and :id as the user id.",
           "type": "string"
         },
         "autoregistration_allowed_query": {
