@@ -60,6 +60,7 @@ prev_tokens = ExpiringSet(120)
 
 
 @app.route('/login', methods=['GET'])
+@optional_auth
 def login():
     config_handler = RuntimeConfig("mysochAuth", app.logger)
     tenant = tenant_handler.tenant()
@@ -221,10 +222,14 @@ def login():
         return resp
     else:
         target_query.update({'mysoch:unknownidentity': 1})
+        parts = parts._replace(query=urlencode(target_query))
+        target_url = urlunparse(parts)
+        resp = make_response(redirect(target_url))
 
-    parts = parts._replace(query=urlencode(target_query))
-    target_url = urlunparse(parts)
-    return make_response(redirect(target_url))
+        if identity:
+            unset_jwt_cookies(resp)
+
+        return resp
 
 @app.route('/checklogin', methods=['GET'])
 @optional_auth
