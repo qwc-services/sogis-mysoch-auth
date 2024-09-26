@@ -11,6 +11,8 @@ jobs:
 
       - name: Validate schema
         run: |
+          python -mvenv venv
+          . venv/bin/activate
           python -m pip install check-jsonschema
           check-jsonschema --check-metaschema schemas/sogis-mysoch-auth.json
 
