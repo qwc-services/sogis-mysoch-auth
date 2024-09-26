@@ -226,6 +226,7 @@ def login():
         target_url = urlunparse(parts)
         resp = make_response(redirect(target_url))
 
+        identity = get_identity()
         if identity:
             unset_jwt_cookies(resp)
 
