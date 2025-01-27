@@ -17,20 +17,13 @@ See [sogis-mysoch-auth.json](./schemas/sogis-mysoch-auth.json) configuration sch
 
 All configuration options can also be set with the respective UPPER_CASE environment variables.
 
-Usage/Development
------------------
+Development
+-----------
 
-Create and activate a virtual environment:
+Install dependencies and run service:
 
-    python3 -m venv .venv
-    source .venv/bin/activate
+    uv run src/server.py
 
-Install requirements:
+With config path:
 
-    pip install -r requirements.txt
-
-### Usage
-
-Run standalone application:
-
-    python src/server.py
+    CONFIG_PATH=/PATH/TO/CONFIGS/ uv run src/server.py
