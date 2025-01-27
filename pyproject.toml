@@ -1,6 +1,6 @@
 [project]
 name = "sogis-mysoch-auth"
-version = "v2025.01.23"
+version = "v2025.01.27"
 description = "SOGIS my.so.ch Authentication"
 readme = "README.md"
 requires-python = ">=3.10"
