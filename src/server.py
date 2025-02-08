@@ -34,9 +34,8 @@ app.secret_key = app.config['JWT_SECRET_KEY']
 
 
 tenant_handler = TenantHandler(app.logger)
-
 app.wsgi_app = TenantPrefixMiddleware(app.wsgi_app)
-app.session_interface = TenantSessionInterface(os.environ)
+app.session_interface = TenantSessionInterface()
 
 class ExpiringSet():
     def __init__(self, max_age_seconds):
