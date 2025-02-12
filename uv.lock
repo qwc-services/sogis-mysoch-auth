@@ -367,7 +367,7 @@ wheels = [
 
 [[package]]
 name = "sogis-mysoch-auth"
-version = "2025.2.9"
+version = "2025.2.12"
 source = { virtual = "." }
 dependencies = [
     { name = "flask" },
