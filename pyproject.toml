@@ -1,6 +1,6 @@
 [project]
 name = "sogis-mysoch-auth"
-version = "v2026.08.05"
+version = "v2026.08.21"
 description = "SOGIS my.so.ch Authentication"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -8,7 +8,7 @@ dependencies = [
     "Flask~=3.1.0",
     "Werkzeug~=3.1.4",
     "Flask-JWT-Extended~=4.7.1",
-    "qwc-services-core~=1.6.0",
+    "qwc-services-core~=1.7.0",
     "psycopg2~=2.9.10",
     "SQLAlchemy~=2.0.37",
     "jwcrypto~=1.5.6"
